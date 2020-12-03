@@ -57,8 +57,8 @@ int main(int argc, char *argv[])
         timeout.tv_sec=5;
         timeout.tv_usec=5000;
         
-        //소켓 포함 모든 파일디스크립터를 대상으로 '수신된 데이터의 존재여부' 검사
-            //오류가 발생했다면
+  
+        //오류가 발생시
         if((fd_num=select(fd_max+1, &cpy_reads, 0, 0, &timeout))==-1) {
             break;
         }
@@ -66,17 +66,18 @@ int main(int argc, char *argv[])
         if(fd_num==0) {
             continue;
         }
-            //변화가 발생했다면
+     
         for(i=0; i<fd_max+1; i++) {
             if(FD_ISSET(i, &cpy_reads)) {
-                // 연결요청이 발생했다면
+                // 연결요청이 발생시 if문
                 if(i==serv_sock) {
                     //연결요청 수락    
                     adr_temp=sizeof(clnt_adr);
                     clnt_sock=accept(serv_sock, (struct sockaddr*)&clnt_adr, &adr_temp);
                     
-                    //해당 연결을 감시하도록 FD_SET을 통해 설정
+                    //해당 연결을 감시 FD_SET을 통해 설정
                     FD_SET(clnt_sock, &reads);
+                 
                     //연결을 통해 clnt_sock 값이 증가했다면 fd_max 재설정
                     //(연결종료 된 클라이언트 < 새로 연결된 클라이언트)이라면 
                     if(fd_max<clnt_sock)
